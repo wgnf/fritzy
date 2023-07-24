@@ -199,7 +199,7 @@ def pbkdf2_hex(password_bytes: bytes, salt: bytes, iterations: int) -> bytes:
 def calculate_megabytes(high_bytes: int, low_bytes: int) -> float:
     # 4294967296 = max-limit of uint32
     total_bytes = high_bytes * 4294967296 + low_bytes
-    total_megabytes = total_bytes / 1000 / 1000
+    total_megabytes = total_bytes / 1024 / 1024
 
     return total_megabytes
 
