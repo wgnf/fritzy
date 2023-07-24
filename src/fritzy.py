@@ -13,7 +13,7 @@ TRAFFIC_STATS_URL ="/data.lua"
 
 # TODO: better error handling using exceptions instead of sys.exit!
 # TODO: remove excessive prints
-# TODO; improve code-structure
+# TODO: improve code-structure
 
 def main():
     args = get_args()
@@ -45,7 +45,7 @@ def get_args() -> dict[str, str]:
     return args
 
 def get_challenge_response(box_login_url: str, password: str) -> str:
-    # have a look at this document to see whats going on here: https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AVM_Technical_Note_-_Session_ID_deutsch_2021-05-03.pdf
+    # have a look at this document to see whats going on here: https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AVM_Technical_Note_-_Session_ID_english_2021-05-03.pdf
     response = requests.get(box_login_url)
 
     if response.status_code != 200:
