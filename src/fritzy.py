@@ -14,6 +14,7 @@ TRAFFIC_STATS_URL ="/data.lua"
 # TODO: better error handling using exceptions instead of sys.exit!
 # TODO: remove excessive prints
 # TODO: improve code-structure
+# TODO: respect the "BlockTime"
 
 def main():
     args = get_args()
