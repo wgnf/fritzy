@@ -7,6 +7,7 @@ import urllib, urllib.parse
 import re
 import json
 from datetime import date, timedelta
+from pyquery import PyQuery
 
 LOGIN_URL = "/login_sid.lua?version=2"
 TRAFFIC_STATS_URL ="/data.lua"
@@ -15,6 +16,7 @@ TRAFFIC_STATS_URL ="/data.lua"
 # TODO: remove excessive prints
 # TODO: improve code-structure
 # TODO: respect the "BlockTime"
+# TODO: sanity checks i.e. when splitting strings
 
 def main():
     args = get_args()
@@ -101,7 +103,7 @@ def get_traffic_stats_yesterday(session_id: str, box_url: str) -> dict[str, any]
     data = {
         "xhr": "1",
         "sid": session_id,
-        "lang": "de",
+        "lang": "en",
         "no_siderenew": "",
         "page": "netCnt"
     }
@@ -116,9 +118,12 @@ def get_traffic_stats_yesterday(session_id: str, box_url: str) -> dict[str, any]
     html_content = response.content
 
     sent_received_yesterday = get_sent_received_yesterday(html_content)
+    connections_online_time_yesterday = get_connections_online_time_yesterday(html_content)
 
     traffic_stats_yesterday = {
         "date": date.today() - timedelta(1),
+        "connections": connections_online_time_yesterday["connections"],
+        "online_time": connections_online_time_yesterday["online_time"],
         "megabytes_sent": sent_received_yesterday["sent"],
         "megabytes_received": sent_received_yesterday["received"],
         "megabytes_total": sent_received_yesterday["total"]
@@ -152,6 +157,18 @@ def get_sent_received_yesterday(html_content: str) -> dict[str, float]:
         "received": megabytes_received,
         "total": megabytes_total
     }
+
+def get_connections_online_time_yesterday(html_content: str) -> dict[str, int]:
+    query = PyQuery(html_content)
+    
+    online_time = query("tr#uiYesterday>td.time")
+    connections = query("tr#uiYesterday>td.conn")
+
+    return {
+        "online_time": calculate_online_time_in_minutes(online_time.text()),
+        "connections": int(connections.text())
+    }
+
 
 def logout(session_id: str, user: str, box_login_url: str) -> None:
     logout_data_dict = { 
@@ -203,6 +220,13 @@ def calculate_megabytes(high_bytes: int, low_bytes: int) -> float:
     total_megabytes = total_bytes / 1024 / 1024
 
     return total_megabytes
+
+# the original value is formatted like "hh:mm", so we have to calculate the actual value
+def calculate_online_time_in_minutes(online_time_str: str) -> int:
+    online_time_split = online_time_str.split(":")
+
+    online_time_in_minutes = int(online_time_split[0]) * 60 + int(online_time_split[1])
+    return online_time_in_minutes
 
 if __name__ == '__main__':
     main()
