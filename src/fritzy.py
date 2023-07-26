@@ -7,7 +7,7 @@ import urllib, urllib.parse
 import re
 import json
 from datetime import date, timedelta
-from pyquery import PyQuery
+from pyquery import PyQuery # requires module install
 
 LOGIN_URL = "/login_sid.lua?version=2"
 TRAFFIC_STATS_URL ="/data.lua"
@@ -168,7 +168,6 @@ def get_connections_online_time_yesterday(html_content: str) -> dict[str, int]:
         "online_time": calculate_online_time_in_minutes(online_time.text()),
         "connections": int(connections.text())
     }
-
 
 def logout(session_id: str, user: str, box_login_url: str) -> None:
     logout_data_dict = { 
