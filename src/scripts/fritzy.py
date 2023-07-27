@@ -1,22 +1,25 @@
-import argparse
 import sys
 import pymongo # requires module install
+from dotenv import load_dotenv # requires module install
+import os
 
 from fritzy_auth import FritzBoxAuthenticator
 from fritzy_netstats import FritzBoxInternetStats
 
-TRAFFIC_STATS_URL ="/data.lua"
-
-# TODO: handle secrets better
-
 def main():
-    args = get_args()
+    session_id = ''
 
     try:
-        authenticator = FritzBoxAuthenticator(args['url'], args['user'], args['password'])
+        load_dotenv()
+
+        base_url = os.getenv('FRITZ_BASE_URL')
+        user = os.getenv('FRITZ_USER')
+        password = os.getenv('FRITZ_PASSWORD')
+
+        authenticator = FritzBoxAuthenticator(base_url, user, password)
         session_id = authenticator.auth()
 
-        stats_getter = FritzBoxInternetStats(session_id, args['url'])
+        stats_getter = FritzBoxInternetStats(session_id, base_url)
         stats = stats_getter.get_yesterday()
 
         print(stats)
@@ -29,26 +32,14 @@ def main():
         if len(session_id) > 0:
             authenticator.logout(session_id)
 
-def get_args() -> dict[str, str]:
-    argument_parser = argparse.ArgumentParser()
-
-    argument_parser.add_argument("-a", "--address", dest="url", required=False, default="http://fritz.box/", help="the base-url of the fritz-box to query. defaults to 'http://fritz.box/'")
-    argument_parser.add_argument("-u", "--user", dest="user", required=True, help="the username of the user to use to login")
-    argument_parser.add_argument("-p", "--password", dest="password", required=True, help="the password of the user to login")
-
-    arguments = argument_parser.parse_args()
-
-    args = {
-        "url": arguments.url,
-        "user": arguments.user,
-        "password": arguments.password
-    }
-    return args
-
 def write_traffic_stats_to_db(traffic_stats: dict[str, any]) -> None:
-    db_client = pymongo.MongoClient("mongodb://localhost:27017")
-    db = db_client["fritzy"]
-    collection = db["trafficstats"]
+    mongo_url = os.getenv('MONGO_URL')
+    mongo_db = os.getenv('MONGO_DB')
+    mongo_collection = os.getenv('MONGO_COLLECTION')
+
+    db_client = pymongo.MongoClient(mongo_url)
+    db = db_client[mongo_db]
+    collection = db[mongo_collection]
     
     collection.insert_one(traffic_stats)
 

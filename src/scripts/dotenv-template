@@ -1,0 +1,7 @@
+FRITZ_BASE_URL=""
+FRITZ_USER=""
+FRITZ_PASSWORD=""
+
+MONGO_URL="mongodb://localhost:27017"
+MONGO_DB="fritzy"
+MONGO_COLLECTION="trafficstats"
