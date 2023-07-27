@@ -6,7 +6,7 @@ import hashlib
 
 # have a look at this document to see how authentication works: https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/AVM_Technical_Note_-_Session_ID_english_2021-05-03.pdf
 
-LOGIN_URL = "/login_sid.lua?version=2"
+LOGIN_URL = '/login_sid.lua?version=2'
 
 class FritzBoxAuthenticator:
     def __init__(self, base_url: str, user: str, password: str) -> None:
