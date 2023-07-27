@@ -6,8 +6,9 @@ import hashlib
 import urllib, urllib.parse
 import re
 import json
-from datetime import date, timedelta
+from datetime import datetime, timedelta
 from pyquery import PyQuery # requires module install
+import pymongo # requires module install
 
 LOGIN_URL = "/login_sid.lua?version=2"
 TRAFFIC_STATS_URL ="/data.lua"
@@ -17,6 +18,7 @@ TRAFFIC_STATS_URL ="/data.lua"
 # TODO: improve code-structure
 # TODO: respect the "BlockTime"
 # TODO: sanity checks i.e. when splitting strings
+# TODO: handle secrets better
 
 def main():
     args = get_args()
@@ -27,6 +29,8 @@ def main():
 
     traffic_stats = get_traffic_stats_yesterday(session_id, args["url"])
     print(traffic_stats)
+
+    write_traffic_stats_to_db(traffic_stats)
 
     # TODO: this should always be executed even when an exception occurs after we established a session
     logout(session_id, args["user"], box_login_url)
@@ -121,7 +125,7 @@ def get_traffic_stats_yesterday(session_id: str, box_url: str) -> dict[str, any]
     connections_online_time_yesterday = get_connections_online_time_yesterday(html_content)
 
     traffic_stats_yesterday = {
-        "date": date.today() - timedelta(1),
+        "date": datetime.today() - timedelta(1),
         "connections": connections_online_time_yesterday["connections"],
         "online_time": connections_online_time_yesterday["online_time"],
         "megabytes_sent": sent_received_yesterday["sent"],
@@ -130,6 +134,13 @@ def get_traffic_stats_yesterday(session_id: str, box_url: str) -> dict[str, any]
     }
 
     return traffic_stats_yesterday
+
+def write_traffic_stats_to_db(traffic_stats: dict[str, any]) -> None:
+    db_client = pymongo.MongoClient("mongodb://localhost:27017")
+    db = db_client["fritzy"]
+    collection = db["trafficstats"]
+    
+    collection.insert_one(traffic_stats)
 
 def get_sent_received_yesterday(html_content: str) -> dict[str, float]:
     # the data for the traffic is hidden inside a JSON in the javascript-code
