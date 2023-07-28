@@ -12,12 +12,14 @@ class FritzBoxInternetStats:
         self.session_id = session_id
         self.url = urllib.parse.urljoin(base_url, TRAFFIC_STATS_URL)
 
+    """gets the internet-stats from yesterday"""
     def get_yesterday(self) -> dict[str, any]:
         netcnt_html = self.__get_netcnt_html()
         stats = self.__get_stats_yesterday(netcnt_html)
 
         return stats
 
+    """gets the internet-stats html-page from the fritz-box"""
     def __get_netcnt_html(self) -> str:
         headers = { 'Content-Type': 'application/x-www-form-urlencoded' }
         data = {
@@ -35,6 +37,7 @@ class FritzBoxInternetStats:
         
         return response.content
     
+    """determines the internet-stats from yesterday from a given html-page"""
     def __get_stats_yesterday(self, html_content: str) -> dict[str, any]:
         sent_and_received = self.__get_sent_and_received_yesterday(html_content)
         connections_and_online_time = self.__get_connections_and_online_time_yesterday(html_content)
@@ -50,6 +53,7 @@ class FritzBoxInternetStats:
 
         return stats_yesterday
     
+    """determines the traffic-data from yesterday from the given html-content"""
     def __get_sent_and_received_yesterday(self, html_content: str) -> dict[str, float]:
         # the data for the traffic is hidden inside a JSON in the javascript-code
         # this regex seems to get the job done fairly well: https://regexr.com/7hhib
@@ -75,6 +79,7 @@ class FritzBoxInternetStats:
             'total': megabytes_total
         }
     
+    """determines the connections and online-time from the given html-content"""
     def __get_connections_and_online_time_yesterday(self, html_content: str) -> dict[str, int]:
         query = PyQuery(html_content)
 
@@ -86,6 +91,7 @@ class FritzBoxInternetStats:
             'connections': int(connections.text())
         }
 
+    """traffic-data is split in high- and low-bytes and this function calculates the actual megabyte value"""
     def __calculate_megabytes(self, high_bytes: int, low_bytes: int) -> float:
         # 4294967296 = max-limit of uint32
         total_bytes = high_bytes * 4294967296 + low_bytes
@@ -93,7 +99,7 @@ class FritzBoxInternetStats:
 
         return total_megabytes
     
-    # the original value is formatted like "hh:mm", so we have to calculate the actual value
+    """the online-time is displayed like 'hh:mm' so this function calculates the total minutes from that string"""
     def __calculate_online_time_in_minutes(self, online_time_str: str) -> int:
         online_time_split = online_time_str.split(':')
 

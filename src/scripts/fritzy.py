@@ -24,7 +24,7 @@ def main():
 
         print(stats)
 
-        write_traffic_stats_to_db(stats)
+        write_stats_to_db(stats)
     except Exception as exception:
         exception_message = str(exception)
         print(exception_message, file=sys.stderr)
@@ -32,7 +32,7 @@ def main():
         if len(session_id) > 0:
             authenticator.logout(session_id)
 
-def write_traffic_stats_to_db(traffic_stats: dict[str, any]) -> None:
+def write_stats_to_db(traffic_stats: dict[str, any]) -> None:
     mongo_url = os.getenv('MONGO_URL')
     mongo_db = os.getenv('MONGO_DB')
     mongo_collection = os.getenv('MONGO_COLLECTION')

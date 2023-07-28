@@ -14,7 +14,7 @@ class FritzBoxAuthenticator:
         self.user = user
         self.password = password
 
-    """Authenticates at the fritz-box and returning the session-id"""
+    """authenticates at the fritz-box and returning the session-id"""
     def auth(self) -> str:
         auth_info = self.__get_auth_info()
         self.__respect_block_time(auth_info['block_time'])
@@ -23,6 +23,7 @@ class FritzBoxAuthenticator:
 
         return session_id
     
+    """invalidates the provided session-id aka logs you out"""
     def logout(self, session_id: str) -> None:
         logout_data = {
             'username': self.user,
@@ -37,7 +38,7 @@ class FritzBoxAuthenticator:
         if post_response.status_code != 200:
             raise Exception(f'unable to logout. received status-code "{post_response.status_code}"')
     
-    """Get information from the login-endpoint to get information about challenge"""
+    """gets information from the login-endpoint to get information about challenge"""
     def __get_auth_info(self) -> dict[str, any]:
         response = requests.get(self.url)
 
@@ -58,10 +59,12 @@ class FritzBoxAuthenticator:
             'block_time': block_time,
         }
     
+    """if a block-time is provided the script waits the required amount of time"""
     def __respect_block_time(self, block_time: int) -> None:
         if block_time > 0:
             time.sleep(block_time)
 
+    """determines the needed challenge-response to be able to authenticate from the given auth-info"""
     def __get_challenge_response(self, challenge: str) -> str:
         tokens = self.__get_challenge_tokens(challenge)
 
@@ -74,6 +77,7 @@ class FritzBoxAuthenticator:
         response = f'{tokens["salt2"].hex()}${hash2.hex()}'
         return response
     
+    """uses the challenge-response to authenticate with the fritz-box and getting the needed session-id"""
     def __get_session_id(self, challenge_response: str) -> str:
         data_dict = {
             'username': self.user,
@@ -97,6 +101,7 @@ class FritzBoxAuthenticator:
         
         return session_id
 
+    """determines the different challenge-tokens from the raw challenge-response"""
     def __get_challenge_tokens(self, challenge: str) -> dict[str, any]:
         split = challenge.split('$')
         if len(split) < 5:
@@ -111,6 +116,7 @@ class FritzBoxAuthenticator:
         }
         return tokens
 
+    """encrypts the given password using the needed algorithm"""
     def __pbkdf2_hex(self, password_bytes: bytes, salt: bytes, iterations: int) -> bytes:
         hashed_password = hashlib.pbkdf2_hmac('sha256', password_bytes, salt, iterations)
         return hashed_password
