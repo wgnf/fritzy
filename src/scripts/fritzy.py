@@ -7,6 +7,9 @@ from fritzy_auth import FritzBoxAuthenticator
 from fritzy_netstats import FritzBoxInternetStats
 
 def execute():
+    print(f'python version:     {sys.version_info}')
+    print(f'pymongo version:    {pymongo.version} ({pymongo.has_c()})')
+
     session_id = ''
 
     try:

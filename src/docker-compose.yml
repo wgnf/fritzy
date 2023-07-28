@@ -6,20 +6,20 @@ networks:
     driver: bridge
 
 services:
-  mongo:
+  fritzy-mongo:
     image: mongo:4.4.6 # use older version because 5.0+ requires CPU to have AVX support
     networks:
       - fritzy-network
     env_file:
-      - 'scripts/scripts.env'
+      - 'scripts/.env'
     container_name: fritzy-mongo
 
   fritzy-script:
-    image: fritzy
+    image: fritzy-script
     networks:
       - fritzy-network
     env_file:
-      - 'scripts/scripts.env'
+      - 'scripts/.env'
     depends_on:
-      - mongo
+      - fritzy-mongo
     container_name: fritzy-script
