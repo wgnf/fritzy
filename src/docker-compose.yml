@@ -1,0 +1,16 @@
+version: '3.1'
+
+services:
+  mongo:
+    image: mongo
+    env_file:
+      - 'scripts/scripts.env'
+    container_name: fritzy-mongo
+
+  fritzy-script:
+    image: fritzy
+    env_file:
+      - 'scripts/scripts.env'
+    depends_on:
+      - mongo
+    container_name: fritzy-script
