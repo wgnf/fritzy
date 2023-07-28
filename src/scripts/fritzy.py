@@ -37,11 +37,14 @@ def write_traffic_stats_to_db(traffic_stats: dict[str, any]) -> None:
     mongo_db = os.getenv('MONGO_DB')
     mongo_collection = os.getenv('MONGO_COLLECTION')
 
-    db_client = pymongo.MongoClient(mongo_url)
-    db = db_client[mongo_db]
-    collection = db[mongo_collection]
-    
-    collection.insert_one(traffic_stats)
+    try:
+        db_client = pymongo.MongoClient(mongo_url)
+        db = db_client[mongo_db]
+        collection = db[mongo_collection]
+        
+        collection.insert_one(traffic_stats)
+    except Exception as exception:
+        raise Exception('unable to push data to the mongo-db. is your db configured and running?') from exception
 
 if __name__ == '__main__':
     main()
