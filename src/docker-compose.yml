@@ -7,7 +7,7 @@ networks:
 
 services:
   mongo:
-    image: mongo
+    image: mongo:4.4.6 # use older version because 5.0+ requires CPU to have AVX support
     networks:
       - fritzy-network
     env_file:
