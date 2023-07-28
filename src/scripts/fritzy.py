@@ -6,7 +6,7 @@ import os
 from fritzy_auth import FritzBoxAuthenticator
 from fritzy_netstats import FritzBoxInternetStats
 
-def main():
+def execute():
     session_id = ''
 
     try:
@@ -38,13 +38,12 @@ def write_stats_to_db(traffic_stats: dict[str, any]) -> None:
     mongo_collection = os.getenv('MONGO_COLLECTION')
 
     try:
+        print('writing data to db...')
         db_client = pymongo.MongoClient(mongo_url)
         db = db_client[mongo_db]
         collection = db[mongo_collection]
         
         collection.insert_one(traffic_stats)
+        print('data successfully written to db')
     except Exception as exception:
         raise Exception('unable to push data to the mongo-db. is your db configured and running?') from exception
-
-if __name__ == '__main__':
-    main()
