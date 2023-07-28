@@ -1,14 +1,23 @@
 version: '3.1'
 
+networks:
+  fritzy-network:
+    name: fritzy-network
+    driver: bridge
+
 services:
   mongo:
     image: mongo
+    networks:
+      - fritzy-network
     env_file:
       - 'scripts/scripts.env'
     container_name: fritzy-mongo
 
   fritzy-script:
     image: fritzy
+    networks:
+      - fritzy-network
     env_file:
       - 'scripts/scripts.env'
     depends_on:
