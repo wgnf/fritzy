@@ -17,7 +17,7 @@ class FritzBoxAuthenticator:
     """Authenticates at the fritz-box and returning the session-id"""
     def auth(self) -> str:
         auth_info = self.__get_auth_info()
-        self.__respect_block_time(auth_info["block_time"])
+        self.__respect_block_time(auth_info['block_time'])
         response = self.__get_challenge_response(auth_info['challenge'])
         session_id = self.__get_session_id(response)
 
@@ -47,8 +47,8 @@ class FritzBoxAuthenticator:
         xml_tree = ET.ElementTree(ET.fromstring(response.content))
         xml_root = xml_tree.getroot()
 
-        challenge = xml_root.find("Challenge").text
-        block_time = int(xml_root.find("BlockTime").text)
+        challenge = xml_root.find('Challenge').text
+        block_time = int(xml_root.find('BlockTime').text)
 
         if len(challenge) < 1:
             raise Exception('unable to find challenge in authentication-information')
@@ -90,7 +90,7 @@ class FritzBoxAuthenticator:
         
         xml_tree = ET.ElementTree(ET.fromstring(response.content))
         xml_root = xml_tree.getroot()
-        session_id = xml_root.find("SID").text
+        session_id = xml_root.find('SID').text
 
         if len(session_id) < 1 or session_id == '0000000000000000':
             raise Exception('wrong username or password')
