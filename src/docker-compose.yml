@@ -15,7 +15,9 @@ services:
     container_name: fritzy-mongo
 
   fritzy-script:
-    image: fritzy-script
+    build:
+      context: ./scripts/
+      dockerfile: Dockerfile
     networks:
       - fritzy-network
     env_file:
