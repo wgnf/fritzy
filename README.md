@@ -12,7 +12,7 @@ to run you simply have to use `docker-compose` like so:
 sudo docker-compose -f ./src/docker-compose.yml up --build -d
 ```
 
-to stop the docker-container simply use:
+to stop the docker-containers simply use:
 
 ```bash
 sudo docker-compose -f ./src/docker-compose.yml stop

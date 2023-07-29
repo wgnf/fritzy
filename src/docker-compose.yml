@@ -11,17 +11,15 @@ services:
     networks:
       - fritzy-network
     env_file:
-      - 'scripts/.env'
+      - '.env'
     container_name: fritzy-mongo
 
   fritzy-script:
     build:
-      context: ./scripts/
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./scripts/Dockerfile
     networks:
       - fritzy-network
-    env_file:
-      - 'scripts/.env'
     depends_on:
       - fritzy-mongo
     container_name: fritzy-script
