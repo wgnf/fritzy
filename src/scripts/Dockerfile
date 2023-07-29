@@ -10,4 +10,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY ./scripts .
 COPY .env .
 
-CMD [ "python", "exec.py" ]
+CMD [ "python", "-u", "exec.py" ]
