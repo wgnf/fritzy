@@ -13,6 +13,7 @@ services:
     env_file:
       - '.env'
     container_name: fritzy-mongo
+    command: ["--quiet", "--logpath", "/var/log/mongodb/fritzy-mongo.log"]
 
   fritzy-script:
     build:
