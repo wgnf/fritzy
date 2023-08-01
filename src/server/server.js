@@ -20,6 +20,8 @@ const client = new MongoClient(mongoUrl, {
     })
 
 app.get('/total', async (request, response) => {
+    // TODO: get all totals of all data (using mongo-aggregate(?)) including the start-date
+
     const allData = client.db(mongoDb).collection(mongoCollection).find();
     client.db(mongoDb).collection(mongoCollection).aggregate
 
@@ -34,6 +36,8 @@ app.get('/total', async (request, response) => {
 
     response.status(200).send(data);
 });
+
+// TODO: get historical data (for the last X days using pagination? or forever?)
 
 const server = app.listen(port, async () => {
     console.log(`fritzy-server listening on port ${port}`);
