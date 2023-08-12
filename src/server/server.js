@@ -62,7 +62,20 @@ app.get('/total', async (_, response) => {
     }
 });
 
-// TODO: get historical data (for the last X days using pagination? or forever?)
+app.get('/items', async (_, response) => {
+    try {
+        const result = await client
+            .db(mongoDb)
+            .collection(mongoCollection)
+            .find()
+            .toArray();
+
+        response.json(result);
+    } catch(error) {
+        console.error('Error determining the items', error);
+        response.status(500).send('Internal server error');
+    }
+});
 
 app.listen(port, async () => {
     console.log(`fritzy-server listening on port ${port}`);
