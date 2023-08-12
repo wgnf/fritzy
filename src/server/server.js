@@ -21,9 +21,24 @@ const client = new MongoClient(mongoUrl, {
 
 app.use(express.json());
 
-app.get('/total', async (_, response) => {
+app.get('/total', async (request, response) => {
     try {
-        const pipeline = [
+        const days = parseInt(request.query.days);
+        let pipeline = [];
+
+        if (days) {
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - days);
+
+            pipeline.push({
+                $match: {
+                    date: { $gte: startDate }
+                }
+            });
+        }
+
+        pipeline = [
+            ...pipeline,
             {
                 $group: {
                     _id: null, // i don't want to transform the _id in any way!
@@ -32,7 +47,8 @@ app.get('/total', async (_, response) => {
                     total_megabytes_sent: { $sum: '$megabytes_sent' },
                     total_megabytes_received: { $sum: '$megabytes_received' },
                     total_megabytes: { $sum: '$megabytes_total' },
-                    since_date: { $min: '$date' }
+                    since_date: { $min: '$date' },
+                    items: { $sum: 1 }
                 }
             },
             // to transform the result in a format that i want
@@ -40,6 +56,7 @@ app.get('/total', async (_, response) => {
                 $project: {
                     _id: 0, // i don't need the _id
                     since_date: 1,
+                    items: 1,
                     total_connections: 1,
                     total_online_time: 1,
                     total_megabytes_sent: 1,
@@ -62,12 +79,26 @@ app.get('/total', async (_, response) => {
     }
 });
 
-app.get('/items', async (_, response) => {
+app.get('/items', async (request, response) => {
     try {
+        const days = parseInt(request.query.days);
+        let query = {};
+
+        if (days) {
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - days);
+
+            query = {
+                'date': {
+                    $gte: startDate
+                }
+            };
+        }
+
         const result = await client
             .db(mongoDb)
             .collection(mongoCollection)
-            .find()
+            .find(query)
             .toArray();
 
         response.json(result);
