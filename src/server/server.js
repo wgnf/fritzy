@@ -17,29 +17,54 @@ const client = new MongoClient(mongoUrl, {
             strict: true,
             deprecationErrors: true
         }
-    })
+    });
 
-app.get('/total', async (request, response) => {
-    // TODO: get all totals of all data (using mongo-aggregate(?)) including the start-date
+app.use(express.json());
 
-    const allData = client.db(mongoDb).collection(mongoCollection).find();
-    client.db(mongoDb).collection(mongoCollection).aggregate
-
-    let totalMegabytes = 0;
-    for await (const data of allData) {
-        totalMegabytes += data.megabytes_total;
+app.get('/total', async (_, response) => {
+    try {
+        const pipeline = [
+            {
+                $group: {
+                    _id: null, // i don't want to transform the _id in any way!
+                    total_connections: { $sum: '$connections' },
+                    total_online_time: { $sum: '$online_time' },
+                    total_megabytes_sent: { $sum: '$megabytes_sent' },
+                    total_megabytes_received: { $sum: '$megabytes_received' },
+                    total_megabytes: { $sum: '$megabytes_total' },
+                    since_date: { $min: '$date' }
+                }
+            },
+            // to transform the result in a format that i want
+            {
+                $project: {
+                    _id: 0, // i don't need the _id
+                    since_date: 1,
+                    total_connections: 1,
+                    total_online_time: 1,
+                    total_megabytes_sent: 1,
+                    total_megabytes_received: 1,
+                    total_megabytes: 1
+                }
+            }
+        ];
+    
+        const result = await client
+            .db(mongoDb)
+            .collection(mongoCollection)
+            .aggregate(pipeline)
+            .toArray();
+    
+        response.json(result[0]);
+    } catch(error) {
+        console.error('Error determining the total stats', error);
+        response.status(500).send('Internal server error');
     }
-
-    const data = {
-        totalMegabytes: totalMegabytes
-    };
-
-    response.status(200).send(data);
 });
 
 // TODO: get historical data (for the last X days using pagination? or forever?)
 
-const server = app.listen(port, async () => {
+app.listen(port, async () => {
     console.log(`fritzy-server listening on port ${port}`);
 
     try {
