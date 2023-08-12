@@ -24,3 +24,13 @@ services:
     depends_on:
       - fritzy-mongo
     container_name: fritzy-script
+
+  fritzy-server:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    networks:
+      - fritzy-network
+    depends_on:
+      - fritzy-mongo
+    container_name: fritzy-server

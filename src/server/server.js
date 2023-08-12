@@ -11,13 +11,7 @@ const mongoUrl = process.env.MONGO_URL;
 const mongoDb = process.env.MONGO_DB;
 const mongoCollection = process.env.MONGO_COLLECTION;
 
-const client = new MongoClient(mongoUrl, {
-        serverApi: {
-            version: ServerApiVersion.v1,
-            strict: true,
-            deprecationErrors: true
-        }
-    });
+const client = new MongoClient(mongoUrl);
 
 app.use(express.json());
 
