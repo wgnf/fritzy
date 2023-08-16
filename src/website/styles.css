@@ -1,0 +1,116 @@
+@import url(assets/fontawesome/fontawesome-all.min.css);
+
+@font-face {
+    font-family: 'Aharoni';
+    src: url('assets/fonts/ahronbd.ttf') format('truetype');
+}
+
+/*
+ * Colors see:
+ * light: https://realtimecolors.com/?colors=1f0f13-f8f1f3-b4755f-ede8d9-ab934d
+ * dark: https://realtimecolors.com/?colors=f8f1f3-1f0f13-b4755f-1f1b0f-ddd3b4
+ */
+:root {
+    --text-color-light: #1f0f13;
+    --text-color-dark: #f8f1f3;
+
+    --background-color-light: #f8f1f3;
+    --background-color-dark: #1f0f13;
+
+    --primary-color-light: #b4755f;
+    --primary-color-dark: #b4755f;
+
+    --secondary-color-light: #ede8d9;
+    --secondary-color-dark: #1f1b0f;
+
+    --accent-color-light: #aa9350;
+    --accent-color-dark: #ddd3b4;
+}
+
+[theme="light"] {
+    --text-color: var(--text-color-light);
+    --background-color: var(--background-color-light);
+    --primary-color: var(--primary-color-light);
+    --secondary-color: var(--secondary-color-light);
+    --accent-color: var(--accent-color-light);
+}
+
+[theme="dark"] {
+    --text-color: var(--text-color-dark);
+    --background-color: var(--background-color-dark);
+    --primary-color: var(--primary-color-dark);
+    --secondary-color: var(--secondary-color-dark);
+    --accent-color: var(--accent-color-dark);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.fas {
+    color: var(--accent-color);
+}
+
+html,
+body {
+    font-size: 20px;
+}
+
+body {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px;
+    font-family: Aharoni, Arial, Helvetica, sans-serif;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+h1 {
+    font-size: 3rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* #### THEME TOGGLE #### */
+
+.theme-control {
+    position: absolute;
+    top: 10px;
+}
+
+#theme-toggle {
+    opacity: 0;
+    position: absolute;
+}
+
+#theme-toggle-display {
+    background-color: #111;
+    width: 50px;
+    height: 26px;
+    border-radius: 50px;
+    position: relative;
+    padding: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#theme-toggle-display .theme-toggle-ball {
+    background-color: var(--accent-color);
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    border-radius: 50%;
+    transition: transform 0.2s linear;
+}
+
+#theme-toggle:checked + #theme-toggle-display .theme-toggle-ball {
+    transform: translateX(24px);
+}
+
