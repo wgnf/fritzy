@@ -115,6 +115,10 @@ h1 {
     transition: transform 600ms cubic-bezier(.02,.94,.09,.97);
 }
 
+.theme-toggle-ball:hover {
+    filter: brightness(85%);
+}
+
 #theme-toggle:checked + #theme-toggle-display .theme-toggle-ball {
     transform: translateX(24px);
 }
@@ -130,6 +134,7 @@ a:visited {
 }
 
 /* #### BUTTONS #### */
+
 .primary-button {
     font-family: Aharoni, Arial, Helvetica, sans-serif;
     font-size: 20px;
@@ -141,6 +146,10 @@ a:visited {
     background-color: var(--primary-color);
     padding: 5px;
     margin: 0;
+}
+
+.primary-button:hover {
+    filter: brightness(85%);
 }
 
 /* #### FOOTER #### */
@@ -173,6 +182,10 @@ footer {
     padding: 7px;
     float: left;
     cursor: pointer;
+}
+
+.switch-toggle input + label:hover {
+    filter: brightness(85%);
 }
 
 .switch-toggle input:checked + label {
