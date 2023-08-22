@@ -25,6 +25,9 @@
 
     --accent-color-light: #aa9350;
     --accent-color-dark: #ddd3b4;
+
+    --opaque-background-light: rgba(140, 140, 140, 0.125);
+    --opaque-background-dark: rgba(255, 255, 255, 0.125);
 }
 
 [theme="light"] {
@@ -33,6 +36,7 @@
     --primary-color: var(--primary-color-light);
     --secondary-color: var(--secondary-color-light);
     --accent-color: var(--accent-color-light);
+    --opaque-background: var(--opaque-background-light);
 }
 
 [theme="dark"] {
@@ -41,6 +45,7 @@
     --primary-color: var(--primary-color-dark);
     --secondary-color: var(--secondary-color-dark);
     --accent-color: var(--accent-color-dark);
+    --opaque-background: var(--opaque-background-dark);
 }
 
 * {
@@ -50,7 +55,7 @@
 }
 
 .fas {
-    color: var(--accent-color);
+    color: var(--text-color);
 }
 
 html,
@@ -87,7 +92,7 @@ h1 {
 }
 
 #theme-toggle-display {
-    background-color: #111;
+    background-color: var(--opaque-background);
     width: 50px;
     height: 26px;
     border-radius: 50px;
@@ -100,17 +105,103 @@ h1 {
 }
 
 #theme-toggle-display .theme-toggle-ball {
-    background-color: var(--accent-color);
+    background-color: var(--primary-color);
     width: 22px;
     height: 22px;
     position: absolute;
     left: 2px;
     top: 2px;
     border-radius: 50%;
-    transition: transform 0.2s linear;
+    transition: transform 600ms cubic-bezier(.02,.94,.09,.97);
 }
 
 #theme-toggle:checked + #theme-toggle-display .theme-toggle-ball {
     transform: translateX(24px);
 }
+
+/* #### LINKS #### */
+
+a {
+    color: var(--accent-color);
+}
+
+a:visited {
+    color: var(--accent-color);
+}
+
+/* #### BUTTONS #### */
+.primary-button {
+    font-family: Aharoni, Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    color: var(--text-color);
+    border: none;
+    height: 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    padding: 5px;
+    margin: 0;
+}
+
+/* #### FOOTER #### */
+
+footer {
+    margin: 4rem 0 0.5rem 0;
+    position: absolute;
+    bottom: 0;
+    height: 1rem;
+}
+
+/* #### SWITCH TOGGLE #### */
+
+/* TODO: anmimation when checked changes! */
+.switch-toggle {
+    float: left;
+    height: 30px;
+    background: var(--opaque-background);
+    border-radius: 15px;
+    margin-right: 0.25rem;
+ }
+
+ .switch-toggle input {
+   position: absolute;
+   opacity: 0;
+ }
+
+ .switch-toggle input + label {
+   padding: 7px;
+   float:left;
+   cursor: pointer;
+ }
+
+ .switch-toggle input:checked + label {
+   background: var(--primary-color);
+   height: 30px;
+   border-radius: 15px;
+ }
+
+ /* #### CHART AND SELECTION #### */
+
+ #timespan-select {
+    display: flex;
+    align-items: center;
+ }
+
+ #timespan-select > #timespan-select-number-days {
+    font-family: Aharoni, Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    color: var(--text-color);
+    border: none;
+    border-radius: 5px;
+    background-color: var(--opaque-background);
+    height: 30px;
+    width: 3rem;
+    margin: 0 0.25rem 0 0;
+    padding: 5px;
+ }
+
+ .chart-section {
+    margin-top: 2rem;
+    height: 30px;
+ }
 

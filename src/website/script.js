@@ -1,9 +1,12 @@
+let currentTimespanSelection = '';
+
 window.onload = function() {
     onWindowLoad();
 }
 
 function onWindowLoad() {
     handleThemeToggle();
+    handleTimespanSelection();
 }
 
 function handleThemeToggle() {
@@ -31,4 +34,31 @@ function handleThemeToggle() {
         document.documentElement.setAttribute('theme', theme);
         localStorage.setItem('theme', theme);
     });
+}
+
+function handleTimespanSelection() {
+    const customTimespanInput = document.querySelector('#timespan-select-number-days');
+    const timespanSelectRadios = document.timespanSelect.timespanSelectRadios;
+    currentTimespanSelection = timespanSelectRadios.value;
+
+    changeHandler = () => {
+        if (timespanSelectRadios.value !== currentTimespanSelection) {
+            currentTimespanSelection = timespanSelectRadios.value;
+        }
+
+        customTimespanInput.style.display = currentTimespanSelection === 'custom'
+            ? 'block'
+            : 'none';
+    }
+    
+    timespanSelectRadios.forEach(element => {
+        element.addEventListener('change', changeHandler);
+    });
+
+    // execute 'changeHandler' once, so that UI is updated with current value
+    changeHandler();
+}
+
+function submitTimespanSelection() {
+    console.log(`SUBMIT: ${currentTimespanSelection}`);
 }
