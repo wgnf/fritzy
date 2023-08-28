@@ -14,7 +14,7 @@ function handleThemeToggle() {
     let currentTheme = localStorage.getItem('theme');
 
     if (!currentTheme) {
-        currentTheme = 'light';
+        currentTheme = 'dark';
     }
 
     document.documentElement.setAttribute('theme', currentTheme);
