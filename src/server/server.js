@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import { MongoClient } from 'mongodb';
 
@@ -13,10 +14,13 @@ const mongoCollection = process.env.MONGO_COLLECTION;
 
 const client = new MongoClient(mongoUrl);
 
+app.use(cors());
 app.use(express.json());
 
 app.get('/total', async (request, response) => {
     try {
+        console.debug('Received call at /total endpoint');
+
         const days = parseInt(request.query.days);
         let pipeline = [];
 
@@ -65,8 +69,12 @@ app.get('/total', async (request, response) => {
             .collection(mongoCollection)
             .aggregate(pipeline)
             .toArray();
+
+            const jsonResult = JSON.stringify(result[0], null, 2);
     
         response.json(result[0]);
+
+        console.debug(`Served response at /total endpoint:\n${jsonResult}`);
     } catch(error) {
         console.error('Error determining the total stats', error);
         response.status(500).send('Internal server error');
@@ -75,7 +83,10 @@ app.get('/total', async (request, response) => {
 
 app.get('/items', async (request, response) => {
     try {
-        const days = parseInt(request.query.days);
+        let queryDays = request.query.days;
+        console.debug(`Received call at /items endpoint with ${queryDays} days`);
+
+        const days = parseInt(queryDays);
         let query = {};
 
         if (days) {
@@ -95,7 +106,11 @@ app.get('/items', async (request, response) => {
             .find(query)
             .toArray();
 
+        const jsonResult = JSON.stringify(result, null, 2);
+
         response.json(result);
+
+        console.debug(`Served response at /items endpoint:\n${jsonResult}`);
     } catch(error) {
         console.error('Error determining the items', error);
         response.status(500).send('Internal server error');
