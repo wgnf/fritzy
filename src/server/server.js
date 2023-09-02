@@ -69,12 +69,8 @@ app.get('/total', async (request, response) => {
             .collection(mongoCollection)
             .aggregate(pipeline)
             .toArray();
-
-            const jsonResult = JSON.stringify(result[0], null, 2);
     
         response.json(result[0]);
-
-        console.debug(`Served response at /total endpoint:\n${jsonResult}`);
     } catch(error) {
         console.error('Error determining the total stats', error);
         response.status(500).send('Internal server error');
@@ -106,11 +102,7 @@ app.get('/items', async (request, response) => {
             .find(query)
             .toArray();
 
-        const jsonResult = JSON.stringify(result, null, 2);
-
         response.json(result);
-
-        console.debug(`Served response at /items endpoint:\n${jsonResult}`);
     } catch(error) {
         console.error('Error determining the items', error);
         response.status(500).send('Internal server error');
