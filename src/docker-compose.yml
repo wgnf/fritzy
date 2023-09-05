@@ -10,10 +10,11 @@ services:
     image: mongo:4.4.6 # use older version because 5.0+ requires CPU to have AVX support
     networks:
       - fritzy-network
+    logging:
+      driver: json-file
     env_file:
       - '.env'
     container_name: fritzy-mongo
-    command: ["--quiet", "--logpath", "/var/log/mongodb/fritzy-mongo.log"]
 
   fritzy-script:
     build:
@@ -21,6 +22,8 @@ services:
       dockerfile: ./scripts/Dockerfile
     networks:
       - fritzy-network
+    logging:
+      driver: json-file
     depends_on:
       - fritzy-mongo
     container_name: fritzy-script
@@ -31,6 +34,8 @@ services:
       dockerfile: ./server/Dockerfile
     networks:
       - fritzy-network
+    logging:
+      driver: json-file
     ports:
       - '8081:8081'
     depends_on:
@@ -43,6 +48,8 @@ services:
       dockerfile: ./website/Dockerfile
     networks:
       - fritzy-network
+    logging:
+      driver: json-file
     ports:
       - '8080:80'
     environment:
