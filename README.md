@@ -1,6 +1,6 @@
 # fritzy
 
-A little project to gather internet-stats from a fritz-box
+A small project to gather internet-stats from a fritz-box
 
 ## how to develop
 
@@ -27,17 +27,17 @@ first you have to rename `.env.template` to `.env` and enter the values that fit
 to run you simply have to use `docker-compose` like so:  
 
 ```bash
-sudo docker-compose -f ./src/docker-compose.yml up --build -d
+sudo docker compose -f ./src/docker-compose.yml up --build -d
 ```
 
 to stop the docker-containers simply use:
 
 ```bash
-sudo docker-compose -f ./src/docker-compose.yml stop
+sudo docker compose -f ./src/docker-compose.yml stop
 ```
 
 and to remove the docker-containers entirely use:
 
 ```bash
-sudo docker-compose -f ./src/docker-compose.yml down
+sudo docker compose -f ./src/docker-compose.yml down
 ```
