@@ -110,25 +110,30 @@ function handleTotals() {
 }
 
 function showTotals(totalsJson) {
-    const totalDisplay = document.querySelector('#total-total');
-    totalDisplay.textContent = formatMegabytes(totalsJson.total_megabytes);
+    const elementsToUpdate = document.querySelectorAll("[data-value]");
+    elementsToUpdate.forEach((element) => {
+        let value = totalsJson[element.dataset.value];
 
-    const totalSentDisplay = document.querySelector('#total-sent');
-    totalSentDisplay.textContent = formatMegabytes(totalsJson.total_megabytes_sent);
+        switch (element.dataset.type) {
+            case('plain'):
+                // value doesn't need to change!
+                break;
+            case('mb'):
+                value = formatMegabytes(value);
+                break;
+            case('date'):
+                value = formatDate(value);
+                break;
+            case('time'):
+                value = formatTime(value);
+                break;
+            default:
+                value = '???';
+                break;
+        };
 
-    const totalReceivedDisplay = document.querySelector('#total-received');
-    totalReceivedDisplay.textContent = formatMegabytes(totalsJson.total_megabytes_received);
-
-    const totalConnectionsDisplay = document.querySelector('#total-connections');
-    totalConnectionsDisplay.textContent = totalsJson.total_connections;
-
-    const totalOnlineTimeDisplay = document.querySelector('#total-online');
-    totalOnlineTimeDisplay.textContent = totalsJson.total_online_time;
-
-    const totalSinceDisplay = document.querySelector('#total-since');
-    const formattedTotalSince = formatDate(totalsJson.since_date);
-
-    totalSinceDisplay.textContent = formattedTotalSince;
+        element.textContent = value;
+    });
 }
 
 function submitTimespanSelection() {
@@ -210,4 +215,11 @@ function formatDate(isoDate) {
     const formatted = date.toLocaleDateString('de-DE', options);
 
     return formatted;
+}
+
+function formatTime(timeInMinutes) {
+    const hours = timeInMinutes / 60;
+    const days = hours / 24;
+
+    return `${days.toFixed(2)} days`;
 }
