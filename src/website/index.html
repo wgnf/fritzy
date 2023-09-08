@@ -11,7 +11,7 @@
 
     <link rel="stylesheet" href="styles.css">
 
-    <script type="text/javascript" src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script type="text/javascript" src="script.js"></script>
 </head>
 <body>
@@ -46,8 +46,40 @@
                 <i class="fas fa-sync"></i>
             </button>
         </form>
+        
+        <div id="chart-container">
+            <canvas></canvas>
+        </div>
+    </div>
 
-        <div id="chart-container"></div>
+    <div>
+        <h2>totals</h2>
+        <table>
+            <tr>
+                <td>total</td>
+                <td id="total-total">X</td>
+            </tr>
+            <tr>
+                <td>sent</td>
+                <td id="total-sent">X</td>
+            </tr>
+            <tr>
+                <td>received</td>
+                <td id="total-received">X</td>
+            </tr>
+            <tr>
+                <td>connections</td>
+                <td id="total-connections">X</td>
+            </tr>
+            <tr>
+                <td>online time</td>
+                <td id="total-online">X</td>
+            </tr>
+            <tr>
+                <td>since</td>
+                <td id="total-since">X</td>
+            </tr>
+        </table>
     </div>
 
     <footer>

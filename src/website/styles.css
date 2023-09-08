@@ -133,6 +133,12 @@ a:visited {
     color: var(--accent-color);
 }
 
+/* #### TABLES #### */
+
+td {
+    padding-right: 30px;
+}
+
 /* #### BUTTONS #### */
 
 .primary-button {
