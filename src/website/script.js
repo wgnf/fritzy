@@ -73,7 +73,8 @@ function createChart() {
         options: {
             plugins: {
                 title: {
-                    display: false,
+                    display: true,
+                    text: 'X',
                 },
                 legend: {
                     labels: {
@@ -138,6 +139,7 @@ function showTotals(totalsJson) {
 
 function submitTimespanSelection() {
     let days = undefined;
+
     switch (currentTimespanSelection) {
         case('all'):
             days = undefined;
@@ -164,11 +166,11 @@ function submitTimespanSelection() {
 
             return response.json();
         })
-        .then(json => updateChart(json))
+        .then(json => updateChart(json, days))
         .catch(error => console.error(`Getting internet statics failed: ${error.message}`));
 }
 
-function updateChart(dataJson) {
+function updateChart(dataJson, days) {
     const labels = dataJson.map(item => {
         return formatDate(item.date);
     });
@@ -192,6 +194,14 @@ function updateChart(dataJson) {
         },
     ];
 
+    let title = 'X';
+    if (days) {
+        title = `traffic for the last ${days} days`;
+    } else {
+        title = 'traffic for the whole history'
+    }
+
+    chart.options.plugins.title.text = title;
     chart.data = {
         labels: labels,
         datasets: datasets,
